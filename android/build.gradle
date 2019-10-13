@@ -14,6 +14,8 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "http://dl.bintray.com/pt-midtrans/maven" }
+        maven { url "https://jitpack.io" }
     }
 }
 apply plugin: 'com.android.library'
@@ -30,5 +32,6 @@ android {
 }
 
 dependencies {
-    testImplementation files('libs/flutter.jar')
+    compileOnly files('libs/flutter.jar')
+    api 'com.midtrans:uikit:1.23.1'
 }

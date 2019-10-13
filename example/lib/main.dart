@@ -48,9 +48,31 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: <Widget>[
+              Text('Running on: $_platformVersion\n'),
+              this._purchaseProductButton(context)
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _purchaseProductButton(BuildContext context) {
+    return FlatButton(
+      onPressed: () {
+        print('Clicked');
+        Midtrans().purchase(
+          clientKey: 'Mid-client-x4FzL_1er9fKFcfy',
+          merchantBaseUrl: 'https://www.zenius.net',
+          token: '5df03d61-453a-4ce4-aaa9-599abfd65efa',
+          callback: (TransactionFinished finished) async {
+            print(finished);
+          }
+        );
+      },
+      child: Text("Arbitrary Purchase"),
     );
   }
 }

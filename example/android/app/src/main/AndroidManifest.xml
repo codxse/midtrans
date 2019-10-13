@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="id.nadiar.midtrans_example">
+    package="id.nadiar.midtrans_example"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -9,11 +12,13 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="midtrans_example"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme"
+        tools:replace="android:label">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
+            android:theme="@style/AppTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
