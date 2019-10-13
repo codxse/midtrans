@@ -8,13 +8,14 @@ class Midtrans {
   static const MethodChannel _channel = const MethodChannel('id.nadiar.midtrans');
   static MidtransCallback finishCallback;
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+  Midtrans(String clientKey, String merchantBaseUrl) {
+    _channel.invokeMethod('init', {
+      "clientKey": clientKey,
+      "merchantBaseUrl": merchantBaseUrl,
+    });
   }
 
   Future<dynamic> _channelHandler(MethodCall methodCall) async {
-    print("Midtrans MethodCall: $methodCall");
     if (methodCall.method == "onTransactionFinished") {
       if (finishCallback != null) {
         await finishCallback(TransactionFinished(
@@ -32,17 +33,10 @@ class Midtrans {
     finishCallback = callback;
   }
 
-  Future<void> purchase({
-    @required String clientKey,
-    @required String merchantBaseUrl,
-    @required String token,
-    @required MidtransCallback callback
-  }) async {
+  Future<void> purchase({@required String token, @required MidtransCallback callback}) async {
     _channel.setMethodCallHandler(_channelHandler);
     this._setFinishCallback(callback);
     await _channel.invokeMethod('purchase', {
-      "clientKey": clientKey,
-      "merchantBaseUrl": merchantBaseUrl,
       "token": token,
     });
   }

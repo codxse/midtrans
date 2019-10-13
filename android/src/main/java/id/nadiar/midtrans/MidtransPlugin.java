@@ -23,7 +23,7 @@ public class MidtransPlugin implements MethodCallHandler, TransactionFinishedCal
   private final MethodChannel channel;
   private Context context;
 
-  public MidtransPlugin(Registrar registrar, MethodChannel channel) {
+  private MidtransPlugin(Registrar registrar, MethodChannel channel) {
     this.registrar = registrar;
     this.channel = channel;
     this.context = registrar.activeContext();
@@ -37,41 +37,47 @@ public class MidtransPlugin implements MethodCallHandler, TransactionFinishedCal
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
-
     System.out.println("call method " + call.method);
-
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
+    if (call.method.equals("init")) {
+      initMidtransSDK(result, call.argument("clientKey").toString(), call.argument("merchantBaseUrl").toString());
     } else if (call.method.equals("purchase")) {
-      UIKitCustomSetting _configuration = MidtransSDK.getInstance().getUIKitCustomSetting();
-      _configuration.setSkipCustomerDetailsPages(true);
-      _configuration.setShowPaymentStatus(true);
-
-      try {
-        SdkUIFlowBuilder.init()
-                .setClientKey(call.argument("clientKey").toString())
-                .setContext(context)
-                .setTransactionFinishedCallback(this)
-                .setMerchantBaseUrl(call.argument("merchantBaseUrl").toString())
-                .enableLog(true)
-                .setUIkitCustomSetting(_configuration)
-                .buildSDK();
-
-        MidtransSDK.getInstance().startPaymentUiFlow(context, call.argument("token").toString());
-      } catch (Exception e) {
-        result.error("Error buld SdkUIFlowBuilder", e.getMessage(), e.getStackTrace());
-      }
-
-
+      purchaseWithSnapToken(result, call.argument("token").toString());
     } else {
       result.notImplemented();
     }
   }
 
+  private void initMidtransSDK(Result result, String clientKey, String baseUrl) {
+    UIKitCustomSetting _configuration = MidtransSDK.getInstance().getUIKitCustomSetting();
+    _configuration.setSkipCustomerDetailsPages(true);
+    _configuration.setShowPaymentStatus(true);
+
+    try {
+      SdkUIFlowBuilder.init()
+              .setClientKey(clientKey)
+              .setContext(context)
+              .setTransactionFinishedCallback(this)
+              .setMerchantBaseUrl(baseUrl)
+              .enableLog(true)
+              .setUIkitCustomSetting(_configuration)
+              .buildSDK();
+      System.out.println("Done 1");
+    } catch (Exception e) {
+      result.error("Error buld SdkUIFlowBuilder", e.getMessage(), e.getStackTrace());
+    }
+    System.out.println("Done 2");
+  }
+
+  private void purchaseWithSnapToken(Result result, String snapToken) {
+    try {
+      MidtransSDK.getInstance().startPaymentUiFlow(context, snapToken);
+    } catch (Exception e) {
+      result.error("Error make purchase", e.getMessage(), e.getStackTrace());
+    }
+  }
+
   @Override
   public void onTransactionFinished(TransactionResult transactionResult) {
-    // Log.d("MIDTRANS", transactionResult.getStatus());
-    // Log.d("MIDTRANS", transactionResult.getStatusMessage());
     Map<String, Object> _purchased = new HashMap<>();
     _purchased.put("transactionCanceled", transactionResult.isTransactionCanceled());
     _purchased.put("status", transactionResult.getStatus());

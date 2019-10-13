@@ -23,16 +23,6 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await Midtrans.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
@@ -61,11 +51,11 @@ class _MyAppState extends State<MyApp> {
 
   Widget _purchaseProductButton(BuildContext context) {
     return FlatButton(
-      onPressed: () {
+      onPressed: () async {
         print('Clicked');
-        Midtrans().purchase(
-          clientKey: 'Mid-client-x4FzL_1er9fKFcfy',
-          merchantBaseUrl: 'https://www.zenius.net',
+        final Midtrans midtrans = Midtrans('Mid-client-x4FzL_1er9fKFcfy', 'https://www.zenius.net');
+        print('hello');
+        await midtrans.purchase(
           token: '5df03d61-453a-4ce4-aaa9-599abfd65efa',
           callback: (TransactionFinished finished) async {
             print(finished);
