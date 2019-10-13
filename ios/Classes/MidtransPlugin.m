@@ -38,9 +38,11 @@ FlutterMethodChannel* channel;
   channel = [FlutterMethodChannel
              methodChannelWithName:@"id.nadiar.midtrans"
              binaryMessenger:[registrar messenger]];
+  MidtransPlugin* instance = [[MidtransPlugin alloc] init];
+  [registrar addMethodCallDelegate:instance channel:channel];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    
+
 }
 @end

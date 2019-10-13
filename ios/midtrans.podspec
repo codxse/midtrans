@@ -16,8 +16,7 @@ An in app payment with Midtrans.
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.dependency 'MidtransCoreKit'
-  s.dependency 'MidtransKit
+  s.dependency 'MidtransKit'
 
   s.ios.deployment_target = '8.0'
 end
-
