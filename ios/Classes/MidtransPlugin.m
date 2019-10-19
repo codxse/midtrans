@@ -43,6 +43,26 @@ FlutterMethodChannel* channel;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+  if ([@"init" isEqualToString:call.method ]) {
+    NSString *key = call.arguments[@"clientKey"];
+    NSString *url = call.arguments[@"merchantBaseUrl"];
+    MidtransServerEnvironment serverEnvirontment = MidtransServerEnvironmentProduction;
+    [CONFIG setClientKey:key environment:serverEnvirontment merchantServerURL:url];
+    return result(0);
+  } else if([@"purchase" isEqualToString:call.method]) {
+    //NSString *str = call.arguments[@"token"];
+    id delegate = [MidtransPayment alloc];
+    NSError *error = nil;
 
+    MidtransTransactionTokenResponse *token = call.arguments[@"token"];
+    MidtransUIPaymentViewController *vc = [[MidtransUIPaymentViewController new] initWithToken:token];
+    vc.paymentDelegate = delegate;
+    UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    [viewController presentViewController:vc animated:YES completion:nil];
+
+    return result(0);
+  } else {
+    result(FlutterMethodNotImplemented);
+  }
 }
 @end

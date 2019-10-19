@@ -33,5 +33,5 @@ android {
 
 dependencies {
     compileOnly files('libs/flutter.jar')
-    api 'com.midtrans:uikit:1.23.1'
+    api 'com.midtrans:uikit:1.23.1-SANBOX'
 }
