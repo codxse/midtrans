@@ -54,11 +54,16 @@ FlutterMethodChannel* channel;
     id delegate = [MidtransPayment alloc];
     NSError *error = nil;
 
-    MidtransTransactionTokenResponse *token = call.arguments[@"token"];
-    MidtransUIPaymentViewController *vc = [[MidtransUIPaymentViewController new] initWithToken:token];
-    vc.paymentDelegate = delegate;
-    UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    [viewController presentViewController:vc animated:YES completion:nil];
+
+    NSString *snapToken = call.arguments[@"token"];
+
+    [[MidtransMerchantClient shared] requestTransacationWithCurrentToken:snapToken completion:^(MidtransTransactionTokenResponse *token, NSError *error)
+    {
+      MidtransUIPaymentViewController *vc = [[MidtransUIPaymentViewController new] initWithToken:token];
+      vc.paymentDelegate = delegate;
+      UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+      [viewController presentViewController:vc animated:YES completion:nil];
+    }];
 
     return result(0);
   } else {
