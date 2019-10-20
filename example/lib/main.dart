@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
     return FlatButton(
       onPressed: () async {
         print('Clicked');
-        final Midtrans midtrans = Midtrans('Mid-client-x4FzL_1er9fKFcfy', 'https://www.zenius.net');
+        final Midtrans midtrans = Midtrans('Mid-client-token', 'https://www.zenius.net');
         print('hello');
         await midtrans.purchase(
           token: '5df03d61-453a-4ce4-aaa9-599abfd65efa',
